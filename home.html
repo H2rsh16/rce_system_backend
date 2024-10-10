@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Auth Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>JWT Authentication Example</h1>
+
+<h2>Register</h2>
+<form id="registerForm">
+    <input type="text" id="registerName" placeholder="Name" required>
+    <input type="text" id="registerUsername" placeholder="Username" required>
+    <input type="password" id="registerPassword" placeholder="Password" required>
+    <button type="submit">Register</button>
+</form>
+
+<h2>Login</h2>
+<form id="loginForm">
+    <input type="text" id="loginUsername" placeholder="Username" required>
+    <input type="password" id="loginPassword" placeholder="Password" required>
+    <button type="submit">Login</button>
+</form>
+
+<h2>Protected Route</h2>
+<button id="protectedButton">Access Protected Route</button>
+<p id="protectedMessage"></p>
+
+<h2>Logout</h2>
+<form action="/logout" method="POST">
+    <button type="submit" id="logoutButton">Logout</button>
+</form>
+
+<script>
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const name = document.getElementById('registerName').value;
+        const email = document.getElementById('registerUsername').value;
+        const password = document.getElementById('registerPassword').value;
+
+        const response = await fetch('http://localhost:3001/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password }),
+        });
+
+        const result = await response.json();
+        console.log(result);
+        
+        alert(result.message || result.error);
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+
+        const response = await fetch('http://localhost:3001/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+            credentials: "include",
+        });
+
+        const result = await response.json();        
+
+        alert(result.message);
+        
+        // if(result.token){
+        //     alert("Login Success");
+        // }
+    });
+
+    document.getElementById('logoutButton').addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const response = fetch('http://localhost:3001/logout', {method: 'GET', credentials: "include"})
+        .then(response => {
+        }).catch(error => console.error('Error:', error));
+
+    });
+
+    document.getElementById('protectedButton').addEventListener('click', async () => {
+        const token = document.cookie.substring(6);
+        
+        const response = await fetch('http://localhost:3001/profile', {
+            method: 'GET',
+            headers: { 'authorization': `Bearer ${token}` },
+        });
+
+        const result = await response.json();
+
+        if(result.data){
+            const dataEntries = Object.entries(result.data);
+    
+            document.getElementById('protectedMessage').innerText = dataEntries.map(([key, value]) => 
+            `${key}: ${value}\n`).join('') || 'Access denied';
+        }
+        else{
+            alert(result.message)
+        }
+
+    });
+</script>
+
+</body>
+</html>
