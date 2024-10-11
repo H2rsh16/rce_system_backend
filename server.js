@@ -8,7 +8,6 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const app = express();
-app.use(cookieParser());
 
 // CORS configuration
 const corsOptions = {
@@ -17,6 +16,7 @@ const corsOptions = {
     },
     credentials: true,
 };
+app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.json());
