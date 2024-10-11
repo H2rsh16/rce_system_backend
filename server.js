@@ -10,7 +10,7 @@ require('dotenv').config();
 const app = express();
 app.use(cookieParser());
 app.use(cors({
-    origin: "https://h2rsh16.github.io/",
+    origin: "*",
     credentials: true
 }));
 app.use(express.json());
