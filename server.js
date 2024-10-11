@@ -74,7 +74,7 @@ app.post('/login', async (req, res) => {
             httpOnly: true,
             maxAge: 3600000, // 1 hour
             secure: true, // Set to true in production
-            sameSite: 'Strict',
+            sameSite: 'Lax',
         });
 
         res.json({ message: 'Login successful', token });
@@ -107,7 +107,7 @@ app.post('/logout', (req, res) => {
     res.clearCookie('token', {
         httpOnly: true,
         secure: true, // Set to true in production
-        sameSite: 'Strict', // Match the same setting used when setting the cookie
+        sameSite: 'Lax', // Match the same setting used when setting the cookie
     });
     return res.json({ message: "Log-out Successfully" });
 });
