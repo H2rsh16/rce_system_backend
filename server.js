@@ -9,13 +9,15 @@ require('dotenv').config();
 
 const app = express();
 app.use(cookieParser());
-const corsOptions = {
-    origin: (origin, callback) => {
-      callback(null, true);
-    },
+
+const allowedOrigins = [
+  'http://localhost:3000',  // Localhost
+  'https://h2rsh16.github.io',  // GitHub Pages
+];
+app.use(cors(
+    origin: allowedOrigins,
     credentials: true,
-};
-app.use(cors(corsOptions));
+));
 app.use(express.json());
 app.use(bodyParser.json());
 
