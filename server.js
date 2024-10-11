@@ -72,9 +72,9 @@ app.post('/login', async (req, res) => {
         const token = jwt.sign({ id: user._id, name: user.name, email: user.email }, process.env.JWT_KEY, { algorithm: 'HS256', expiresIn: '1h' });
         res.cookie('token', token, {
             httpOnly: true,
-            maxAge: 3600000,
-            secure: true,
-            sameSite: 'Lax',
+            maxAge: 3600000, // 1 hour
+            secure: true, // Set to true in production
+            sameSite: 'Strict',
         });
 
         res.json({ message: 'Login successful', token });
@@ -104,7 +104,11 @@ app.get('/profile', (req, res) => {
 });
 
 app.post('/logout', (req, res) => {
-    res.clearCookie('token');
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: true, // Set to true in production
+        sameSite: 'Strict', // Match the same setting used when setting the cookie
+    });
     return res.json({ message: "Log-out Successfully" });
 });
 
