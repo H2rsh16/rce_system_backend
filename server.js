@@ -9,10 +9,13 @@ require('dotenv').config();
 
 const app = express();
 app.use(cookieParser());
-app.use(cors({
-    origin: "*",
-    credentials: true
-}));
+const corsOptions = {
+    origin: (origin, callback) => {
+      callback(null, true);
+    },
+    credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.json());
 
