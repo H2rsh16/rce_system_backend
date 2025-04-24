@@ -107,8 +107,8 @@ app.get('/profile', (req, res) => {
 app.post('/logout', (req, res) => {
     res.clearCookie('token', {
         httpOnly: true,
-        secure: true, // Set to true in production
-        sameSite: 'None', // Match the same setting used when setting the cookie
+        secure: true,
+        sameSite: 'None',
     });
     return res.json({ message: "Log-out Successfully" });
 });
