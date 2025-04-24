@@ -12,9 +12,7 @@ app.set('trust proxy', 1);
 
 // CORS configuration
 const corsOptions = {
-    origin: (origin, callback) => {
-      callback(null, true);
-    },
+    origin: 'https://rce-system-backend.onrender.com',
     credentials: true,
 };
 app.use(cookieParser());
