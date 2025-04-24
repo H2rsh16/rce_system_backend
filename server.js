@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const app = express();
+app.set('trust proxy', 1);
 
 // CORS configuration
 const corsOptions = {
@@ -73,7 +74,7 @@ app.post('/login', async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             maxAge: 3600000, // 1 hour
-            secure: true, // Set to true in production
+            secure: true,
             sameSite: 'None',
         });
 
