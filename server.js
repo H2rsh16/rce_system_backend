@@ -13,7 +13,7 @@ app.set("trust proxy", 1);
 
 // CORS configuration
 const corsOptions = {
-  origin: "https://rce-system-backend.onrender.com",
+  origin: ["http://localhost:3000", "https://rce-system-backend.onrender.com"],
   credentials: true,
 };
 app.use(cookieParser());
@@ -79,11 +79,11 @@ app.post("/login", async (req, res) => {
     const token = jwt.sign(
       { id: user._id, name: user.name, email: user.email },
       process.env.JWT_KEY,
-      { algorithm: "HS256", expiresIn: "1h" },
+      { algorithm: "HS256", expiresIn: "7d" },
     );
     res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 3600000,
+      maxAge: 7 * 24 * 3600000,
       secure: true,
       sameSite: "None",
     });
