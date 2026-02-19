@@ -13,7 +13,11 @@ app.set("trust proxy", 1);
 
 // CORS configuration
 const corsOptions = {
-  origin: ["http://localhost:3000", "https://rce-system-backend.onrender.com"],
+  origin: [
+    "http://localhost:3000",
+    "https://h2rsh16.github.io",
+    "https://rce-system-backend.onrender.com",
+  ],
   credentials: true,
 };
 app.use(cookieParser());
