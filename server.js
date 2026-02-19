@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+const bcryptjs = require("bcryptjs");
 require("dotenv").config();
 
 const app = express();
@@ -47,7 +48,7 @@ app.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcryptjs.hash(password, 10);
     const user = new User({ name, email, password: hashedPassword });
     await user.save();
     res.status(201).json({ message: "User registered successfully" });
@@ -60,15 +61,17 @@ app.post("/register", async (req, res) => {
 
 // Login route
 app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
+  email = email.trim().toLowerCase(); // normalize email
 
   try {
     const user = await User.findOne({ email });
+
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    const isValidPassword = await bcryptjs.compare(password, user.password);
     if (!isValidPassword) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
@@ -80,7 +83,7 @@ app.post("/login", async (req, res) => {
     );
     res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 3600000, // 1 hour
+      maxAge: 3600000,
       secure: true,
       sameSite: "None",
     });
